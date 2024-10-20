@@ -3,7 +3,6 @@
 # time: 2019/04/16--17:12
 __author__ = 'Henry'
 
-
 '''
 项目: B站视频下载
 
@@ -25,14 +24,17 @@ from moviepy.editor import *
 import os, sys
 
 import imageio
-imageio.plugins.ffmpeg.download()
+
+
+# imageio.plugins.ffmpeg.download()
 
 # 访问API地址
 def get_play_list(aid, cid, quality):
     url_api = 'https://api.bilibili.com/x/player/playurl?cid={}&avid={}&qn={}'.format(cid, aid, quality)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
-        'Cookie': 'SESSDATA=aa15d6af%2C1560734457%2Ccc8ca251', # 登录B站后复制一下cookie中的SESSDATA字段,有效期1个月
+        'Cookie': 'SESSDATA=aa8c0413%2C1744965330%2C26907%2Aa1CjAx5YCm29_lGXrRH4_yxvuCpAxWLCiEK8jvl1rzdUkVvutneEFD7pu6rnM61nLrOdASVjVmSmtRaXV5VndRbU9tY0RtekdBZDNoMWRlM21Ub1hrakFpTkxLN2g4cTJoRHIzZ1k1dWNVeWROYXRoSmh6YnpNU1p1b1hrS25qcjl2NjZvVkdKZ3ZBIIEC',
+        # 登录B站后复制一下cookie中的SESSDATA字段,有效期1个月
         'Host': 'api.bilibili.com'
     }
     html = requests.get(url_api, headers=headers).json()
@@ -176,58 +178,68 @@ def combine_video(video_list, title):
 if __name__ == '__main__':
     # 用户输入av号或者视频链接地址
     print('*' * 30 + 'B站视频下载小助手' + '*' * 30)
-    start = input('请输入您要下载的B站av号或者视频链接地址:')
-    if start.isdigit() == True:
-        # 如果输入的是av号
-        # 获取cid的api, 传入aid即可
-        aid = start
-        start_url = 'https://api.bilibili.com/x/web-interface/view?aid=' + aid
-    else:
-        # 如果输入的是url (eg: https://www.bilibili.com/video/av46958874/)
-        aid = re.search(r'/av(\d+)/*', start).group(1)
-        start_url = 'https://api.bilibili.com/x/web-interface/view?aid=' + aid
-    # qn参数就是视频清晰度
-    # 可选值：
-    # 116: 高清1080P60 (需要带入大会员的cookie中的SESSDATA才行,普通用户的SESSDATA最多只能下载1080p的视频)
-    # 112: 高清1080P+ (hdflv2) (需要大会员)
-    # 80: 高清1080P (flv)
-    # 74: 高清720P60 (需要大会员)
-    # 64: 高清720P (flv720)
-    # 32: 清晰480P (flv480)
-    # 16: 流畅360P (flv360)
-    print('请输入您要下载视频的清晰度(1080p60:116;1080p+:112;1080p:80;720p60:74;720p:64;480p:32;360p:16; **注意:1080p+,1080p60,720p60,720p都需要带入大会员的cookie中的SESSDATA才行,普通用户的SESSDATA最多只能下载1080p的视频):')
-    quality = input('请填写116或112或80或74或64或32或16:')
+    # start = input('请输入您要下载的B站av号或者视频链接地址:')
+    # if start.isdigit() == True:
+    #     # 如果输入的是av号
+    #     # 获取cid的api, 传入aid即可
+    #     aid = start
+    #     start_url = 'https://api.bilibili.com/x/web-interface/view?aid=' + aid
+    # else:
+    #     # 如果输入的是url (eg: https://www.bilibili.com/video/av46958874/)
+    #     aid = re.search(r'/av(\d+)/*', start).group(1)
+    #     start_url = 'https://api.bilibili.com/x/web-interface/view?aid=' + aid
+    # # qn参数就是视频清晰度
+    # # 可选值：
+    # # 116: 高清1080P60 (需要带入大会员的cookie中的SESSDATA才行,普通用户的SESSDATA最多只能下载1080p的视频)
+    # # 112: 高清1080P+ (hdflv2) (需要大会员)
+    # # 80: 高清1080P (flv)
+    # # 74: 高清720P60 (需要大会员)
+    # # 64: 高清720P (flv720)
+    # # 32: 清晰480P (flv480)
+    # # 16: 流畅360P (flv360)
+    # print(
+    #     '请输入您要下载视频的清晰度(1080p60:116;1080p+:112;1080p:80;720p60:74;720p:64;480p:32;360p:16; **注意:1080p+,1080p60,720p60,720p都需要带入大会员的cookie中的SESSDATA才行,普通用户的SESSDATA最多只能下载1080p的视频):')
+    # quality = input('请填写116或112或80或74或64或32或16:')
     # 获取视频的cid,title
+    # 991849585, 949481575, 950157570, 225347361, 950588265, 310634497, 653487144, 866017709, 866374002, 353910462
+    # 569217369, 739347696, 952055665, 952169983, 354750881, 824985209, 655208313, 485472707, 398062945, 995831350
+    # 910897150, 528621976, 698734316, 698867722, 613992775, 486528135, 784193176, 486842254, 657050493, 912086493
+    aids = [ 950157570, 225347361, 950588265, 310634497, 653487144, 866017709, 866374002,
+            353910462]
+    quality = 116
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36'
     }
-    html = requests.get(start_url, headers=headers).json()
-    data = html['data']
-    cid_list = []
-    if '?p=' in start:
-        # 单独下载分P视频中的一集
-        p = re.search(r'\?p=(\d+)', start).group(1)
-        cid_list.append(data['pages'][int(p) - 1])
-    else:
-        # 如果p不存在就是全集下载
-        cid_list = data['pages']
-    # print(cid_list)
-    for item in cid_list:
-        cid = str(item['cid'])
-        title = item['part']
-        title = re.sub(r'[\/\\:*?"<>|]', '', title)  # 替换为空的
-        print('[下载视频的cid]:' + cid)
-        print('[下载视频的标题]:' + title)
-        page = str(item['page'])
-        start_url = start_url + "/?p=" + page
-        video_list = get_play_list(aid, cid, quality)
-        start_time = time.time()
-        down_video(video_list, title, start_url, page)
-        combine_video(video_list, title)
+    for aid in aids:
+        start = str(aid)
+        start_url = start_url = 'https://api.bilibili.com/x/web-interface/view?aid=' + start
+        html = requests.get(start_url, headers=headers).json()
+        data = html['data']
+        cid_list = []
+        if '?p=' in start:
+            # 单独下载分P视频中的一集
+            p = re.search(r'\?p=(\d+)', start).group(1)
+            cid_list.append(data['pages'][int(p) - 1])
+        else:
+            # 如果p不存在就是全集下载
+            cid_list = data['pages']
+        # print(cid_list)
+        for item in cid_list:
+            cid = str(item['cid'])
+            title = item['part']
+            title = re.sub(r'[\/\\:*?"<>|]', '', title)  # 替换为空的
+            print('[下载视频的cid]:' + cid)
+            print('[下载视频的标题]:' + title)
+            page = str(item['page'])
+            start_url = start_url + "/?p=" + page
+            video_list = get_play_list(aid, cid, quality)
+            start_time = time.time()
+            down_video(video_list, title, start_url, page)
+            combine_video(video_list, title)
 
-    # 如果是windows系统，下载完成后打开下载目录
-    currentVideoPath = os.path.join(sys.path[0], 'bilibili_video')  # 当前目录作为下载目录
-    if (sys.platform.startswith('win')):
-        os.startfile(currentVideoPath)
+        # 如果是windows系统，下载完成后打开下载目录
+        currentVideoPath = os.path.join(sys.path[0], 'bilibili_video')  # 当前目录作为下载目录
+        if (sys.platform.startswith('win')):
+            os.startfile(currentVideoPath)
 
 # 分P视频下载测试: https://www.bilibili.com/video/av19516333/
