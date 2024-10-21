@@ -23,7 +23,8 @@ import requests, time, urllib.request, re
 from moviepy.editor import *
 import os, sys
 
-import imageio
+
+# import imageio
 
 
 # imageio.plugins.ffmpeg.download()
@@ -204,14 +205,15 @@ if __name__ == '__main__':
     # 991849585, 949481575, 950157570, 225347361, 950588265, 310634497, 653487144, 866017709, 866374002, 353910462
     # 569217369, 739347696, 952055665, 952169983, 354750881, 824985209, 655208313, 485472707, 398062945, 995831350
     # 910897150, 528621976, 698734316, 698867722, 613992775, 486528135, 784193176, 486842254, 657050493, 912086493
-    aids = [ 950157570, 225347361, 950588265, 310634497, 653487144, 866017709, 866374002,
-            353910462]
+    aids = [528621976, 698734316, 698867722, 613992775, 486528135, 784193176, 486842254, 657050493, 912086493]
+    # aids=[991849585]
     quality = 116
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36'
     }
     for aid in aids:
         start = str(aid)
+        print('[下载视频的aid]:' + start)
         start_url = start_url = 'https://api.bilibili.com/x/web-interface/view?aid=' + start
         html = requests.get(start_url, headers=headers).json()
         data = html['data']
